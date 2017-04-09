@@ -3,9 +3,76 @@ from xml.etree import ElementTree
 import os
 import re
 
+defaults = {
+    "has_header": True,
+}
+
+# TODO: Filter out XMLs, leave spreadsheets only
+spreadsheets = {
+    "AM_AirSuperiority.xml": dict(defaults, **{}),
+    "AM_BaseAttack.xml": dict(defaults, **{}),
+    "AM_BombingRun.xml": dict(defaults, **{}),
+    "AM_Construction.xml": dict(defaults, **{}),
+    "AM_GroundAttack.xml": dict(defaults, **{}),
+    "AM_Research.xml": dict(defaults, **{}),
+    "AM_Scout.xml": dict(defaults, **{}),
+    "AM_SupplyRun.xml": dict(defaults, **{}),
+    "AM_Terror.xml": dict(defaults, **{}),
+    "aiprops.xml": dict(defaults, **{}),
+    "aircrafts.xml": dict(defaults, **{}),
+    "aircraftweapons.xml": dict(defaults, **{}),
+    "ammos.xml": dict(defaults, **{}),
+    "armours.xml": dict(defaults, **{}),
+    "armours_gc.xml": dict(defaults, **{}),
+    "buildings.xml": dict(defaults, **{}),
+    "cities.xml": dict(defaults, **{}),
+    "config.xml": dict(defaults, **{}),
+    "config_level_editor.xml": dict(defaults, **{}),
+    "corpseprops.xml": dict(defaults, **{}),
+    "gameconfig.xml": dict(defaults, **{}),
+    "gas_gc.xml": dict(defaults, **{}),
+    "gcloading_tips.xml": dict(defaults, **{}),
+    "gsgcitemtranslator.xml": dict(defaults, **{}),
+    "initCharacters.xml": dict(defaults, **{}),
+    "items.xml": dict(defaults, **{}),
+    "levelsetup.xml": dict(defaults, **{}),
+    "levelsetup_finalmission.xml": dict(defaults, **{}),
+    "levelsetup_quickbattle.xml": dict(defaults, **{}),
+    "manufactures - ORIGINAL.xml": dict(defaults, **{}),
+    "manufactures.xml": dict(defaults, **{}),
+    "missiontypeprops_gc.xml": dict(defaults, **{}),
+    "moraleconfig_gc.xml": dict(defaults, **{}),
+    "psioniceffects_gc.xml": dict(defaults, **{}),
+    "psionicpowers_gc.xml": dict(defaults, **{}),
+    "researches.xml": dict(defaults, **{
+        "columns": 6
+    }),
+    "settings.xml": dict(defaults, **{}),
+    "soldiernames.xml": dict(defaults, **{}),
+    "soldiernamesfemale.xml": dict(defaults, **{}),
+    "soldierprops.xml": dict(defaults, **{}),
+    "sounds.xml": dict(defaults, **{}),
+    "strings.xml": dict(defaults, **{
+        "has_header": False,
+        "columns": 1
+    }),
+    "tilerenderer.xml": dict(defaults, **{}),
+    "vehicles.xml": dict(defaults, **{}),
+    "vehicles_gc.xml": dict(defaults, **{}),
+    "vehicleweapons.xml": dict(defaults, **{}),
+    "vehicleweapons_gc.xml": dict(defaults, **{}),
+    "weapons.xml": dict(defaults, **{
+        "columns": 17
+    }),
+    "weapons_gc.xml": dict(defaults, **{}),
+    "xenopedia.xml ": dict(defaults, **{
+        "columns": 6
+    }),
+}
+
 
 class SpreadSheet:
-    def __init__(self, file, columns, has_header=True):
+    def __init__(self, file, columns, has_header):
         self.file = file
         self.exists = True
         self.columns = columns
@@ -135,7 +202,6 @@ class XML:
         self.data = ElementTree.parse(file)
 
     def match(self, tree, element, is_root=False):
-        #print("MATCH:", element.tag, element.attrib)
         if is_root:
             if tree.tag == element.tag:
                 children = element.findall("./*")
@@ -196,14 +262,12 @@ class XML:
     def modmerge_insert(self, tree, element, match):
         if len(match):
             raise Exception("Can't insert element. Matching element found.")
-        #print("INSERT:", element.tag, element.attrib)
 
         tree.append(element)
 
     def modmerge_update(self, tree, element, match):
         if len(match) != 1:
             raise Exception("No match or match ambiguous.")
-        #print("UPDATE:", element.tag, element.attrib)
 
         for attribute, value in element.attrib.items():
             match[0].set(attribute, value)
@@ -216,7 +280,6 @@ class XML:
     def modmerge_replace(self, tree, element, match):
         if not match:
             raise Exception("Can't replace element. Target not found.")
-        #print("REPLACE:", element.tag, element.attrib)
 
         tree.remove(match[0])
         tree.append(element)
@@ -224,7 +287,6 @@ class XML:
     def modmerge_delete(self, tree, element, match):
         if not match:
             raise Exception("Can't delete element. Target not found.")
-        #print("DELETE:", element.tag, element.attrib)
 
         tree.remove(match[0])
 
@@ -242,3 +304,8 @@ class XML:
 
     def modmerge_updateall(self, tree, element, match):
         raise Exception("STUB: Not implemented")
+
+
+class Binary:
+    def __init__(self, file):
+        pass
