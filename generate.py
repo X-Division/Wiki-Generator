@@ -47,3 +47,18 @@ weapons_gc = xenonauts.game.assets.XML(XENONAUTS_PATH + "/assets/weapons_gc.xml"
 for mod, config in registered_mods.items():
     caller = getattr(weapons_gc, config["xml"])
     caller(XENONAUTS_PATH + "/assets/mods/" + mod + "/weapons_gc.xml")
+
+weapons = xenonauts.game.assets.SpreadSheet(XENONAUTS_PATH + "/assets/weapons.xml", columns=17)
+for mod, config in registered_mods.items():
+    caller = getattr(weapons, config["spreadsheet"])
+    caller(XENONAUTS_PATH + "/assets/mods/" + mod + "/weapons.xml")
+
+xenopedia = xenonauts.game.assets.SpreadSheet(XENONAUTS_PATH + "/assets/xenopedia.xml", columns=6)
+for mod, config in registered_mods.items():
+    caller = getattr(xenopedia, config["spreadsheet"])
+    caller(XENONAUTS_PATH + "/assets/mods/" + mod + "/xenopedia.xml")
+
+
+print(strings["weapon.MAGriflemk2"])
+print(xenopedia["weapon.MAGriflemk2"])
+print(weapons["weapon.MAGriflemk2"])

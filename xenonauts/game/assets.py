@@ -59,15 +59,15 @@ class SpreadSheet:
                 if index:
                     current = int(index) - 1
 
+                if current >= self.columns:
+                    break
+
                 values[current] = item.findtext(
                     "./ss:Data", "",
                     self.namespaces
                 ).strip()
 
                 current += 1
-
-                if current >= self.columns:
-                    break
 
             self[key] = values
 
@@ -135,7 +135,7 @@ class XML:
         self.data = ElementTree.parse(file)
 
     def match(self, tree, element, is_root=False):
-        print("MATCH:", element.tag, element.attrib)
+        #print("MATCH:", element.tag, element.attrib)
         if is_root:
             if tree.tag == element.tag:
                 children = element.findall("./*")
@@ -196,14 +196,14 @@ class XML:
     def modmerge_insert(self, tree, element, match):
         if len(match):
             raise Exception("Can't insert element. Matching element found.")
-        print("INSERT:", element.tag, element.attrib)
+        #print("INSERT:", element.tag, element.attrib)
 
         tree.append(element)
 
     def modmerge_update(self, tree, element, match):
         if len(match) != 1:
             raise Exception("No match or match ambiguous.")
-        print("UPDATE:", element.tag, element.attrib)
+        #print("UPDATE:", element.tag, element.attrib)
 
         for attribute, value in element.attrib.items():
             match[0].set(attribute, value)
@@ -216,7 +216,7 @@ class XML:
     def modmerge_replace(self, tree, element, match):
         if not match:
             raise Exception("Can't replace element. Target not found.")
-        print("REPLACE:", element.tag, element.attrib)
+        #print("REPLACE:", element.tag, element.attrib)
 
         tree.remove(match[0])
         tree.append(element)
@@ -224,7 +224,7 @@ class XML:
     def modmerge_delete(self, tree, element, match):
         if not match:
             raise Exception("Can't delete element. Target not found.")
-        print("DELETE:", element.tag, element.attrib)
+        #print("DELETE:", element.tag, element.attrib)
 
         tree.remove(match[0])
 
